@@ -117,5 +117,21 @@ class Property extends Model
     {
         return $this->hasMany(Deal::class);
     }
+
+    /**
+     * Get the reviews for this property.
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get the average property rating.
+     */
+    public function averageRating(): float
+    {
+        return (float) ($this->reviews()->avg('property_rating') ?? 0.0);
+    }
 }
 

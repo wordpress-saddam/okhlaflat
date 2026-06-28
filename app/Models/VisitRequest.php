@@ -50,4 +50,12 @@ class VisitRequest extends Model
     {
         return $this->hasOne(Deal::class);
     }
+
+    /**
+     * Get the review associated with this visit request.
+     */
+    public function review(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Review::class);
+    }
 }

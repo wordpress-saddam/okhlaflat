@@ -62,5 +62,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(Deal::class, 'agent_id');
     }
+
+    /**
+     * Get the reviews submitted by this customer.
+     */
+    public function reviewsAsCustomer(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Review::class, 'customer_id');
+    }
+
+    /**
+     * Get the reviews received by this agent.
+     */
+    public function reviewsAsAgent(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Review::class, 'agent_id');
+    }
+
+    /**
+     * Get the average rating of this agent.
+     */
+    public function averageAgentRating(): float
+    {
+        return (float) ($this->reviewsAsAgent()->avg('agent_rating') ?? 0.0);
+    }
 }
 

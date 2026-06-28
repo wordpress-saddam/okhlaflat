@@ -84,7 +84,7 @@ class PropertyController extends Controller
             abort(404);
         }
 
-        $property->load(['locality', 'amenities', 'images']);
+        $property->load(['locality', 'amenities', 'images', 'reviews.customer']);
 
         return view('properties.show', compact('property'));
     }

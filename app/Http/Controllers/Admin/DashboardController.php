@@ -8,6 +8,7 @@ use App\Models\Locality;
 use App\Models\Property;
 use App\Models\User;
 use App\Models\VisitRequest;
+use App\Models\Review;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -33,6 +34,9 @@ class DashboardController extends Controller
             ? round(($completedVisitsCount / $totalVisitsCount) * 100, 1) 
             : 0;
 
+        // Platform rating
+        $averagePlatformRating = round(Review::avg('property_rating') ?? 0.0, 1);
+
         // Recent Activity
         $recentListings = Property::with(['locality', 'creator'])->latest()->take(5)->get();
         $recentVisits = VisitRequest::with(['customer', 'property.locality', 'agent'])->latest()->take(5)->get();
@@ -48,11 +52,12 @@ class DashboardController extends Controller
             ])
             ->get()
             ->map(function ($agent) {
-                // Calculate revenue and conversion rate
+                // Calculate revenue, conversion rate, and average rating
                 $agent->revenue_generated = Deal::where('agent_id', $agent->id)->where('payment_status', 'paid')->sum('service_fee');
                 $agent->conversion_rate = $agent->total_leads > 0 
                     ? round(($agent->closed_deals / $agent->total_leads) * 100, 1) 
                     : 0;
+                $agent->average_rating = round($agent->reviewsAsAgent()->avg('agent_rating') ?? 0.0, 1);
                 return $agent;
             })
             ->sortByDesc('revenue_generated');
@@ -76,6 +81,7 @@ class DashboardController extends Controller
             'totalRevenue',
             'pendingRevenue',
             'conversionRate',
+            'averagePlatformRating',
             'recentListings',
             'recentVisits',
             'agents',

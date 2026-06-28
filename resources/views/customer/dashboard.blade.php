@@ -19,6 +19,17 @@
                 </a>
             </div>
 
+            @if(session('success'))
+                <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-sm font-semibold text-emerald-800">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-sm font-semibold text-rose-800">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <!-- Portal Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Left: Saved Properties & Booking History -->
@@ -61,6 +72,7 @@
                                             <th scope="col" class="px-6 py-4">Appointment Time</th>
                                             <th scope="col" class="px-6 py-4">Assigned Agent</th>
                                             <th scope="col" class="px-6 py-4">Status</th>
+                                            <th scope="col" class="px-6 py-4 text-right">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-100 text-sm font-medium text-slate-700">
@@ -114,9 +126,31 @@
                                                     @elseif($request->status === 'scheduled')
                                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-800 border border-teal-200">Scheduled</span>
                                                     @elseif($request->status === 'completed')
-                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">Completed</span>
+                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">Completed</span>
                                                     @else
                                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200">Cancelled</span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4 text-right space-x-1.5 whitespace-nowrap">
+                                                    @if($request->deal)
+                                                        <a href="{{ route('customer.deals.invoice', $request->deal) }}" class="inline-flex items-center px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-xs font-bold text-indigo-700 rounded-lg hover:bg-indigo-100 transition-colors shadow-sm">
+                                                            View Invoice
+                                                        </a>
+                                                    @endif
+
+                                                    @if($request->status === 'completed')
+                                                        @if($request->review)
+                                                            <span class="inline-flex items-center gap-1 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
+                                                                <svg class="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20">
+                                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                                </svg>
+                                                                {{ $request->review->property_rating }}/5 Stars
+                                                            </span>
+                                                        @else
+                                                            <a href="{{ route('customer.reviews.create', $request) }}" class="inline-flex items-center px-2.5 py-1 bg-amber-50 border border-amber-200 text-xs font-bold text-amber-700 rounded-lg hover:bg-amber-100 transition-colors shadow-sm">
+                                                                Rate Visit
+                                                            </a>
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>

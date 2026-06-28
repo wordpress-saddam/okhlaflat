@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\LocalityController;
 use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\AgentController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VisitController;
 use App\Http\Controllers\Admin\DashboardController;
 
@@ -19,6 +20,7 @@ Route::middleware('role:admin')->group(function () {
     Route::resource('localities', LocalityController::class);
     Route::resource('amenities', AmenityController::class);
     Route::resource('agents', AgentController::class);
+    Route::resource('users', UserController::class);
     Route::get('visits', [VisitController::class, 'index'])->name('visits.index');
     Route::post('visits/{visit}/assign', [VisitController::class, 'assign'])->name('visits.assign');
     

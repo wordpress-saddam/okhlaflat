@@ -33,7 +33,7 @@ class PropertyController extends Controller
     public function create()
     {
         $localities = Locality::where('is_active', true)->get();
-        $amenities = Amenity::all();
+        $amenities = Amenity::where('is_active', true)->get();
         $agents = User::role('agent')->get();
 
         return view('admin.properties.create', compact('localities', 'amenities', 'agents'));
@@ -102,7 +102,7 @@ class PropertyController extends Controller
     public function edit(Property $property)
     {
         $localities = Locality::where('is_active', true)->get();
-        $amenities = Amenity::all();
+        $amenities = Amenity::where('is_active', true)->get();
         $agents = User::role('agent')->get();
 
         return view('admin.properties.edit', compact('property', 'localities', 'amenities', 'agents'));

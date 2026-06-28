@@ -1,9 +1,5 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-            {{ __('Share Your Feedback') }}
-        </h2>
-    </x-slot>
+<x-public-layout>
+    <x-slot name="title">Share Your Feedback - OkhlaFlat</x-slot>
 
     <div class="py-12 bg-slate-50 min-h-screen">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
@@ -155,4 +151,4 @@
             }
         });
     </script>
-</x-app-layout>
+</x-public-layout>

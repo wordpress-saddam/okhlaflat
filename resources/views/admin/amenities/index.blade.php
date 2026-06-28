@@ -28,6 +28,11 @@
                     <input type="text" name="icon" id="icon" placeholder="e.g. ac, wifi, parking" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-3">
                 </div>
 
+                <div class="flex items-center">
+                    <input id="is_active" name="is_active" type="checkbox" checked class="h-4.5 w-4.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                    <label for="is_active" class="ml-2.5 text-sm font-semibold text-slate-700">Active</label>
+                </div>
+
                 <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-3.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg duration-200">
                     Create Amenity
                 </button>
@@ -43,6 +48,7 @@
                             <th scope="col" class="px-6 py-4">Name</th>
                             <th scope="col" class="px-6 py-4">Slug</th>
                             <th scope="col" class="px-6 py-4">Icon Tag</th>
+                            <th scope="col" class="px-6 py-4">Status</th>
                             <th scope="col" class="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -56,7 +62,15 @@
                                         {{ $amenity->icon }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-right">
+                                <td class="px-6 py-4">
+                                    @if($amenity->is_active)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">Active</span>
+                                    @else
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-50 text-slate-800 border border-slate-200">Inactive</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-right space-x-2">
+                                    <a href="{{ route('admin.amenities.edit', $amenity) }}" class="text-slate-600 hover:text-slate-700 font-semibold text-xs transition-colors">Edit</a>
                                     <form action="{{ route('admin.amenities.destroy', $amenity) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this amenity?')">
                                         @csrf
                                         @method('DELETE')

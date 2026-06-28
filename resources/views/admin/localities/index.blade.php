@@ -63,7 +63,8 @@
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-50 text-slate-800 border border-slate-200">Inactive</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-right">
+                                <td class="px-6 py-4 text-right space-x-2">
+                                    <a href="{{ route('admin.localities.edit', $locality) }}" class="text-slate-600 hover:text-slate-700 font-semibold text-xs transition-colors">Edit</a>
                                     <form action="{{ route('admin.localities.destroy', $locality) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this locality?')">
                                         @csrf
                                         @method('DELETE')

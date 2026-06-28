@@ -70,7 +70,7 @@ class PropertyController extends Controller
 
         $properties = $query->paginate(9);
         $localities = Locality::where('is_active', true)->orderBy('name')->get();
-        $amenities = Amenity::orderBy('name')->get();
+        $amenities = Amenity::where('is_active', true)->orderBy('name')->get();
 
         return view('properties.index', compact('properties', 'localities', 'amenities'));
     }

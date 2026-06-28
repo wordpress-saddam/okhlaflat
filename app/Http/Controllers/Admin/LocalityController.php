@@ -40,6 +40,14 @@ class LocalityController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Locality $locality)
+    {
+        return view('admin.localities.edit', compact('locality'));
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Locality $locality)

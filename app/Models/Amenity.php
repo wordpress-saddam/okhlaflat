@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['name', 'slug', 'icon'])]
+#[Fillable(['name', 'slug', 'icon', 'is_active'])]
 class Amenity extends Model
 {
     use HasFactory;

@@ -32,10 +32,19 @@ class AmenityController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'icon' => $request->icon ?? 'sparkles',
+            'is_active' => $request->has('is_active'),
         ]);
 
         return redirect()->route('admin.amenities.index')
             ->with('success', 'Amenity created successfully.');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Amenity $amenity)
+    {
+        return view('admin.amenities.edit', compact('amenity'));
     }
 
     /**
@@ -52,6 +61,7 @@ class AmenityController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'icon' => $request->icon ?? 'sparkles',
+            'is_active' => $request->has('is_active'),
         ]);
 
         return redirect()->route('admin.amenities.index')

@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@okhlaflat.com'
         ], [
             'name' => 'Admin User',
+            'mobile' => '9999999991',
             'password' => Hash::make('password123'),
             'email_verified_at' => now(),
         ]);
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'agent@okhlaflat.com'
         ], [
             'name' => 'Agent Saddam',
+            'mobile' => '9999999992',
             'password' => Hash::make('password123'),
             'email_verified_at' => now(),
         ]);
@@ -45,6 +47,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'customer@okhlaflat.com'
         ], [
             'name' => 'Customer Imran',
+            'mobile' => '9999999993',
             'password' => Hash::make('password123'),
             'email_verified_at' => now(),
         ]);

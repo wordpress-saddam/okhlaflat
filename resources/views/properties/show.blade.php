@@ -153,9 +153,39 @@
                         <span class="text-[10px] text-indigo-300 mt-1 block leading-tight">Pay only a fraction instead of a full month's rent!</span>
                     </div>
 
-                    <a href="{{ route('dashboard') }}" class="w-full inline-flex items-center justify-center px-4 py-4 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-900/40 hover:shadow-lg hover:-translate-y-0.5 duration-200">
-                        Book Office Visit to See Flat
-                    </a>
+                    @auth
+                        @php
+                            $hasRequested = auth()->user()->visitRequests()->where('property_id', $property->id)->first();
+                        @endphp
+
+                        @if($hasRequested)
+                            <div class="p-4 bg-indigo-950/80 rounded-xl border border-indigo-900/60 text-center">
+                                <span class="text-xs text-indigo-400 font-bold block">Visit Already Requested</span>
+                                <span class="text-[10px] text-slate-400 mt-1 block">Status: <span class="uppercase font-extrabold text-white">{{ $hasRequested->status }}</span></span>
+                                <a href="{{ route('customer.dashboard') }}" class="text-xs text-indigo-300 hover:text-white mt-2 block underline">View Dashboard</a>
+                            </div>
+                        @else
+                            <form action="{{ route('customer.visits.store') }}" method="POST" class="space-y-4">
+                                @csrf
+                                <input type="hidden" name="property_id" value="{{ $property->id }}">
+                                
+                                <div>
+                                    <label for="customer_notes" class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Optional Notes</label>
+                                    <textarea name="customer_notes" id="customer_notes" rows="2" 
+                                              class="block w-full rounded-lg bg-slate-800 border-slate-700 text-xs font-semibold text-white focus:border-indigo-500 focus:ring focus:ring-indigo-500/20 py-2 px-3 transition-all"
+                                              placeholder="E.g., preferred time, BHK needs..."></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-3.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-900/40 hover:shadow-lg hover:-translate-y-0.5 duration-200">
+                                    Request Office Visit
+                                </button>
+                            </form>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}" class="w-full inline-flex items-center justify-center px-4 py-4 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-900/40 hover:shadow-lg hover:-translate-y-0.5 duration-200">
+                            Log In to Book Visit
+                        </a>
+                    @endauth
                 </div>
             </div>
 

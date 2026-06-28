@@ -48,18 +48,21 @@
 </li>
 
 <li>
-    <a href="#" class="flex gap-x-3 rounded-lg p-2 text-sm leading-6 font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+    <a href="{{ route('admin.agents.index') }}" class="flex gap-x-3 rounded-lg p-2 text-sm leading-6 font-semibold {{ Route::is('admin.agents.*') ? 'bg-indigo-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800' }} transition-all">
         <!-- Users Icon -->
         <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A12.018 12.018 0 0112 21c-3.12 0-6.026-.954-8.384-2.582A9.374 9.374 0 015.421 18 4.125 4.125 0 0113.5 16.5M15 9.75a3 3 0 11-6 0 3 3 0 016 0zm-3 7.5a3 3 0 100-6 3 3 0 000 6zM19.5 9.75a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
         </svg>
-        Agents & Users
+        Agents
     </a>
 </li>
 @endif
 
 <li>
-    <a href="#" class="flex gap-x-3 rounded-lg p-2 text-sm leading-6 font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+    @php
+        $visitsRoute = $role === 'admin' ? 'admin.visits.index' : 'agent.visits.index';
+    @endphp
+    <a href="{{ route($visitsRoute) }}" class="flex gap-x-3 rounded-lg p-2 text-sm leading-6 font-semibold {{ Route::is('admin.visits.*') || Route::is('agent.visits.*') ? 'bg-indigo-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800' }} transition-all">
         <!-- Queue List Icon -->
         <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />

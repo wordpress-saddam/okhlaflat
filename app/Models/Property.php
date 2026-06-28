@@ -101,4 +101,13 @@ class Property extends Model
     {
         return $query->where('verification_status', 'verified');
     }
+
+    /**
+     * Get the visit requests made for this property.
+     */
+    public function visitRequests(): HasMany
+    {
+        return $this->hasMany(VisitRequest::class);
+    }
 }
+

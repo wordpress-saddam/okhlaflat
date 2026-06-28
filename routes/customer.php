@@ -2,8 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Customer\VisitRequestController;
+
 Route::get('/dashboard', function () {
-    return view('customer.dashboard');
+    $visitRequests = auth()->user()->visitRequests()
+        ->with('property.locality', 'agent')
+        ->latest()
+        ->get();
+    return view('customer.dashboard', compact('visitRequests'));
 })->name('dashboard');
 
-// Customer specific routes for favorites, bookings will be added here
+Route::post('/visits', [VisitRequestController::class, 'store'])->name('visits.store');

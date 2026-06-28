@@ -43,13 +43,88 @@
                         <div class="p-6 border-b border-slate-100">
                             <h3 class="text-lg font-bold text-slate-900">My Office Visit History</h3>
                         </div>
-                        <div class="p-8 text-center text-slate-400">
-                            <svg class="mx-auto h-12 w-12 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p class="text-sm font-semibold">No visit bookings found.</p>
-                            <p class="text-xs text-slate-400 mt-1">Book an office visit using the form on the right.</p>
-                        </div>
+                        
+                        @if($visitRequests->isEmpty())
+                            <div class="p-8 text-center text-slate-400">
+                                <svg class="mx-auto h-12 w-12 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <p class="text-sm font-semibold">No visit bookings found.</p>
+                                <p class="text-xs text-slate-400 mt-1">Book an office visit using the form on the right.</p>
+                            </div>
+                        @else
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-slate-100 text-left">
+                                    <thead class="bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-4">Request / Flat</th>
+                                            <th scope="col" class="px-6 py-4">Appointment Time</th>
+                                            <th scope="col" class="px-6 py-4">Assigned Agent</th>
+                                            <th scope="col" class="px-6 py-4">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100 text-sm font-medium text-slate-700">
+                                        @foreach($visitRequests as $request)
+                                            <tr class="hover:bg-slate-50 transition-colors">
+                                                <td class="px-6 py-4">
+                                                    @if($request->property)
+                                                        <div class="font-bold text-slate-900 leading-snug">
+                                                            {{ $request->property->title }}
+                                                        </div>
+                                                        <span class="block text-xs text-slate-400 font-semibold mt-1">
+                                                            Flat: {{ $request->property->property_code }} • {{ $request->property->locality->name }}
+                                                        </span>
+                                                    @else
+                                                        <div class="font-bold text-slate-900 leading-snug">
+                                                            General Consultation
+                                                        </div>
+                                                        <span class="block text-xs text-slate-400 font-normal mt-1">
+                                                            Physical office visit to explore options
+                                                        </span>
+                                                    @endif
+                                                    @if($request->customer_notes)
+                                                        <p class="text-xs text-slate-400 italic mt-2 font-normal line-clamp-1">"{{ $request->customer_notes }}"</p>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4 text-slate-500 font-normal">
+                                                    @if($request->scheduled_at)
+                                                        <span class="text-slate-900 font-semibold">{{ $request->scheduled_at->format('M d, Y') }}</span>
+                                                        <span class="block text-xs text-slate-400 font-semibold mt-1">{{ $request->scheduled_at->format('h:i A') }}</span>
+                                                    @else
+                                                        <span class="text-slate-400 italic">Scheduling pending contact</span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4 text-slate-500 font-semibold">
+                                                    @if($request->agent)
+                                                        <div class="flex items-center gap-2">
+                                                            <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] text-slate-600 font-bold uppercase">
+                                                                {{ substr($request->agent->name, 0, 2) }}
+                                                            </div>
+                                                            <span class="text-xs text-slate-700">{{ $request->agent->name }}</span>
+                                                        </div>
+                                                    @else
+                                                        <span class="text-xs text-slate-400 font-normal italic">Staff assigning soon</span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    @if($request->status === 'pending')
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">Pending</span>
+                                                    @elseif($request->status === 'assigned')
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200">Agent Assigned</span>
+                                                    @elseif($request->status === 'scheduled')
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-800 border border-teal-200">Scheduled</span>
+                                                    @elseif($request->status === 'completed')
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">Completed</span>
+                                                    @else
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200">Cancelled</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -59,7 +134,7 @@
                         <h3 class="text-lg font-bold text-slate-900 mb-4">Book Office Visit</h3>
                         <p class="text-xs text-slate-400 mb-6">Schedule a physical office visit where our agents will showcase verified flats matching your exact requirements.</p>
                         
-                        <form action="#" method="POST" class="space-y-4">
+                        <form action="{{ route('customer.visits.store') }}" method="POST" class="space-y-4">
                             @csrf
                             <div>
                                 <label for="visit_date" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Preferred Date</label>

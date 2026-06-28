@@ -2,8 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Agent\VisitAssignmentController;
+
 Route::get('/dashboard', function () {
     return view('agent.dashboard');
 })->name('dashboard');
 
-// Agent specific routes for leads, visit schedules, notes will be added here
+Route::get('/visits', [VisitAssignmentController::class, 'index'])->name('visits.index');
+Route::put('/visits/{visit}', [VisitAssignmentController::class, 'updateStatus'])->name('visits.update');

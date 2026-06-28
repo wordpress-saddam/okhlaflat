@@ -22,6 +22,9 @@
                 <h3 class="text-lg font-bold text-slate-950 mb-6">Search Filters</h3>
                 
                 <form action="{{ route('properties.index') }}" method="GET" class="space-y-6">
+                    <!-- Hidden sort input to preserve sorting on filter submission -->
+                    <input type="hidden" name="sort_by" value="{{ request('sort_by', 'newest') }}">
+
                     <!-- Locality Filter -->
                     <div>
                         <label for="locality_id" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Locality</label>
@@ -30,6 +33,18 @@
                             @foreach($localities as $locality)
                                 <option value="{{ $locality->id }}" {{ request('locality_id') == $locality->id ? 'selected' : '' }}>{{ $locality->name }}</option>
                             @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Property Type Filter -->
+                    <div>
+                        <label for="property_type" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Property Type</label>
+                        <select name="property_type" id="property_type" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                            <option value="">Any Type</option>
+                            <option value="flat" {{ request('property_type') == 'flat' ? 'selected' : '' }}>Flat</option>
+                            <option value="pg" {{ request('property_type') == 'pg' ? 'selected' : '' }}>PG</option>
+                            <option value="room" {{ request('property_type') == 'room' ? 'selected' : '' }}>Room</option>
+                            <option value="house" {{ request('property_type') == 'house' ? 'selected' : '' }}>House</option>
                         </select>
                     </div>
 
@@ -45,10 +60,17 @@
                         </select>
                     </div>
 
-                    <!-- Max Rent Filter -->
+                    <!-- Rent Range Filter -->
                     <div>
-                        <label for="max_rent" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Max Rent (INR/mo)</label>
-                        <input type="number" name="max_rent" id="max_rent" value="{{ request('max_rent') }}" placeholder="e.g. 20000" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                        <span class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Rent Range (INR/mo)</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <input type="number" name="min_rent" id="min_rent" value="{{ request('min_rent') }}" placeholder="Min" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                            </div>
+                            <div>
+                                <input type="number" name="max_rent" id="max_rent" value="{{ request('max_rent') }}" placeholder="Max" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Furnishing Filter -->
@@ -62,8 +84,29 @@
                         </select>
                     </div>
 
+                    <!-- Nearest Metro Filter -->
+                    <div>
+                        <label for="nearest_metro" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Nearest Metro</label>
+                        <input type="text" name="nearest_metro" id="nearest_metro" value="{{ request('nearest_metro') }}" placeholder="e.g. Okhla Vihar" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                    </div>
+
+                    <!-- Amenities Multi-select Checkboxes -->
+                    <div>
+                        <span class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Amenities</span>
+                        <div class="space-y-2 max-h-40 overflow-y-auto pr-2 border-t border-slate-100 pt-3">
+                            @foreach($amenities as $amenity)
+                                <label class="flex items-center text-sm text-slate-700 cursor-pointer hover:text-slate-950">
+                                    <input type="checkbox" name="amenity_ids[]" value="{{ $amenity->id }}" 
+                                        {{ is_array(request('amenity_ids')) && in_array($amenity->id, request('amenity_ids')) ? 'checked' : '' }}
+                                        class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4 mr-2">
+                                    {{ $amenity->name }}
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+
                     <!-- Buttons -->
-                    <div class="space-y-3">
+                    <div class="space-y-3 pt-2">
                         <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-3 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg duration-200">
                             Apply Filters
                         </button>
@@ -76,6 +119,24 @@
 
             <!-- Listings Grid -->
             <div class="lg:col-span-3 space-y-8">
+                <!-- Toolbar -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
+                    <div class="text-sm text-slate-500 font-medium">
+                        Showing <span class="text-slate-900 font-bold">{{ $properties->firstItem() ?? 0 }}</span> - 
+                        <span class="text-slate-900 font-bold">{{ $properties->lastItem() ?? 0 }}</span> of 
+                        <span class="text-slate-900 font-bold">{{ $properties->total() }}</span> properties
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <label for="sort_by" class="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0">Sort By</label>
+                        <select name="sort_by" id="sort_by" onchange="window.location.href = updateQueryStringParameter(window.location.href, 'sort_by', this.value)" class="rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-xs py-1.5 px-3">
+                            <option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>Newest First</option>
+                            <option value="rent_asc" {{ request('sort_by') == 'rent_asc' ? 'selected' : '' }}>Rent: Low to High</option>
+                            <option value="rent_desc" {{ request('sort_by') == 'rent_desc' ? 'selected' : '' }}>Rent: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     @forelse($properties as $property)
                         <!-- Property Card -->
@@ -148,4 +209,16 @@
 
         </div>
     </section>
+
+    <script>
+        function updateQueryStringParameter(uri, key, value) {
+            var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+            var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+            if (uri.match(re)) {
+                return uri.replace(re, '$1' + key + "=" + value + '$2');
+            } else {
+                return uri + separator + key + "=" + value;
+            }
+        }
+    </script>
 </x-public-layout>

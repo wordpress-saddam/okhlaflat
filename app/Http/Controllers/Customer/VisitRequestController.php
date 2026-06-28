@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
 use App\Models\VisitRequest;
+use App\Models\User;
+use App\Notifications\VisitRequestSubmitted;
+use App\Notifications\NewVisitRequestAdminAlert;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -49,13 +52,22 @@ class VisitRequestController extends Controller
             }
         }
 
-        VisitRequest::create([
+        $visit = VisitRequest::create([
             'property_id' => $propertyId,
             'customer_id' => auth()->id(),
             'status' => 'pending',
             'scheduled_at' => $scheduledAt,
             'customer_notes' => $notes,
         ]);
+
+        // Trigger notifications
+        $customer = auth()->user();
+        $customer->notify(new VisitRequestSubmitted($visit));
+
+        $admins = User::role('admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NewVisitRequestAdminAlert($visit));
+        }
 
         return redirect()->back()->with('success', 'Your physical office visit has been requested. We will contact you shortly!');
     }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
 use App\Models\VisitRequest;
+use App\Notifications\VisitRequestScheduled;
+use App\Notifications\VisitRequestStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -47,7 +49,17 @@ class VisitAssignmentController extends Controller
             $data['scheduled_at'] = \Carbon\Carbon::parse($request->scheduled_date . ' ' . $request->scheduled_time);
         }
 
+        $oldStatus = $visit->status;
         $visit->update($data);
+
+        // Send notifications if status changed
+        if ($oldStatus !== $visit->status && $visit->customer) {
+            if ($visit->status === 'scheduled') {
+                $visit->customer->notify(new VisitRequestScheduled($visit));
+            } elseif ($visit->status === 'completed' || $visit->status === 'cancelled') {
+                $visit->customer->notify(new VisitRequestStatusUpdated($visit));
+            }
+        }
 
         return redirect()->route('agent.visits.index')
             ->with('success', 'Visit status updated successfully.');

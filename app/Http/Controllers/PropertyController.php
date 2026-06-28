@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use App\Models\Locality;
+use App\Models\Amenity;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
@@ -24,6 +25,14 @@ class PropertyController extends Controller
             $query->where('locality_id', $request->locality_id);
         }
 
+        if ($request->filled('property_type')) {
+            $query->where('property_type', $request->property_type);
+        }
+
+        if ($request->filled('min_rent')) {
+            $query->where('rent', '>=', $request->min_rent);
+        }
+
         if ($request->filled('max_rent')) {
             $query->where('rent', '<=', $request->max_rent);
         }
@@ -32,10 +41,38 @@ class PropertyController extends Controller
             $query->where('furnishing', $request->furnishing);
         }
 
-        $properties = $query->orderBy('id', 'desc')->paginate(9);
-        $localities = Locality::where('is_active', true)->orderBy('name')->get();
+        if ($request->filled('nearest_metro')) {
+            $query->where('nearest_metro', 'like', '%' . $request->nearest_metro . '%');
+        }
 
-        return view('properties.index', compact('properties', 'localities'));
+        if ($request->filled('amenity_ids') && is_array($request->amenity_ids)) {
+            foreach ($request->amenity_ids as $amenityId) {
+                $query->whereHas('amenities', function ($q) use ($amenityId) {
+                    $q->where('amenities.id', $amenityId);
+                });
+            }
+        }
+
+        // Sorting
+        $sortBy = $request->input('sort_by', 'newest');
+        switch ($sortBy) {
+            case 'rent_asc':
+                $query->orderBy('rent', 'asc');
+                break;
+            case 'rent_desc':
+                $query->orderBy('rent', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('id', 'desc');
+                break;
+        }
+
+        $properties = $query->paginate(9);
+        $localities = Locality::where('is_active', true)->orderBy('name')->get();
+        $amenities = Amenity::orderBy('name')->get();
+
+        return view('properties.index', compact('properties', 'localities', 'amenities'));
     }
 
     /**

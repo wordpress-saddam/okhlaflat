@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\VisitRequest;
+use App\Notifications\VisitRequestAssigned;
+use App\Notifications\VisitAssignedAgentAlert;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -44,6 +46,12 @@ class VisitController extends Controller
             'agent_id' => $agent->id,
             'status' => $visit->status === 'pending' ? 'assigned' : $visit->status,
         ]);
+
+        // Send notifications
+        if ($visit->customer) {
+            $visit->customer->notify(new VisitRequestAssigned($visit));
+        }
+        $agent->notify(new VisitAssignedAgentAlert($visit));
 
         return redirect()->route('admin.visits.index')
             ->with('success', 'Agent assigned to visit request successfully.');

@@ -13,3 +13,6 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 Route::post('/visits', [VisitRequestController::class, 'store'])->name('visits.store');
+
+// Customer Deal Invoice Access
+Route::get('/deals/{deal}/invoice', [\App\Http\Controllers\Agent\DealController::class, 'invoice'])->name('deals.invoice');

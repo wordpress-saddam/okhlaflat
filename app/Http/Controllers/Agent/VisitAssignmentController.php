@@ -18,7 +18,7 @@ class VisitAssignmentController extends Controller
     public function index(): View
     {
         $visits = auth()->user()->assignedVisits()
-            ->with(['customer', 'property.locality'])
+            ->with(['customer', 'property.locality', 'deal'])
             ->latest()
             ->paginate(15);
 

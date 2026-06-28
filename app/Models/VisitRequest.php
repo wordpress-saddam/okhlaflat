@@ -42,4 +42,12 @@ class VisitRequest extends Model
     {
         return $this->belongsTo(User::class, 'agent_id');
     }
+
+    /**
+     * Get the deal associated with this visit request.
+     */
+    public function deal(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Deal::class);
+    }
 }

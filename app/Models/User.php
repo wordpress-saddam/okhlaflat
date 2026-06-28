@@ -46,5 +46,21 @@ class User extends Authenticatable
     {
         return $this->hasMany(VisitRequest::class, 'agent_id');
     }
+
+    /**
+     * Get the deals where this user is the customer.
+     */
+    public function dealsAsCustomer(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Deal::class, 'customer_id');
+    }
+
+    /**
+     * Get the deals where this user is the agent.
+     */
+    public function dealsAsAgent(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Deal::class, 'agent_id');
+    }
 }
 

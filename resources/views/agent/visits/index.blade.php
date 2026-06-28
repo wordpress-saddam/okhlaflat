@@ -104,28 +104,53 @@
 
                             <!-- Action status Form -->
                             <td class="px-6 py-4 text-right">
-                                <form action="{{ route('agent.visits.update', $visit) }}" method="POST" class="inline-block space-y-2">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="flex items-center justify-end gap-2">
-                                        <!-- Show date inputs only if scheduling -->
-                                        <div x-show="status === 'scheduled'" class="flex gap-2">
-                                            <input type="date" name="scheduled_date" value="{{ $visit->scheduled_at ? $visit->scheduled_at->format('Y-m-d') : '' }}" class="rounded-xl border-slate-200 text-xs py-1.5 focus:border-indigo-500 focus:ring-indigo-500/20 max-w-[120px] font-semibold text-slate-800">
-                                            <input type="time" name="scheduled_time" value="{{ $visit->scheduled_at ? $visit->scheduled_at->format('H:i') : '' }}" class="rounded-xl border-slate-200 text-xs py-1.5 focus:border-indigo-500 focus:ring-indigo-500/20 max-w-[100px] font-semibold text-slate-800">
-                                        </div>
-
-                                        <select name="status" x-model="status" required class="rounded-xl border-slate-200 text-xs py-1.5 focus:border-indigo-500 focus:ring-indigo-500/20 max-w-[140px] font-semibold text-slate-800">
-                                            <option value="assigned" @selected($visit->status === 'assigned')>Assigned</option>
-                                            <option value="scheduled" @selected($visit->status === 'scheduled')>Scheduled</option>
-                                            <option value="completed" @selected($visit->status === 'completed')>Completed</option>
-                                            <option value="cancelled" @selected($visit->status === 'cancelled')>Cancelled</option>
-                                        </select>
-
-                                        <button type="submit" class="inline-flex items-center px-3 py-2 border border-transparent text-xs font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-all">
-                                            Update
-                                        </button>
+                                @if($visit->deal)
+                                    <div class="flex flex-col items-end gap-1">
+                                        <a href="{{ route('agent.deals.invoice', $visit->deal) }}" class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 transition-all">
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                            Invoice: ₹{{ number_format($visit->deal->service_fee) }}
+                                        </a>
+                                        <span class="text-[10px] uppercase font-bold tracking-wider {{ $visit->deal->payment_status === 'paid' ? 'text-emerald-600' : ($visit->deal->payment_status === 'written_off' ? 'text-slate-400' : 'text-amber-600') }}">
+                                            {{ str_replace('_', ' ', $visit->deal->payment_status) }}
+                                        </span>
                                     </div>
-                                </form>
+                                @else
+                                    <div class="flex items-center justify-end gap-3 flex-wrap">
+                                        @if(in_array($visit->status, ['assigned', 'scheduled']))
+                                            <a href="{{ route('agent.deals.create', $visit) }}" class="inline-flex items-center gap-1 px-3 py-2 border border-emerald-200 text-xs font-bold rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 transition-all">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                Close Deal
+                                            </a>
+                                        @endif
+
+                                        <form action="{{ route('agent.visits.update', $visit) }}" method="POST" class="inline-block">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="flex items-center justify-end gap-2">
+                                                <!-- Show date inputs only if scheduling -->
+                                                <div x-show="status === 'scheduled'" class="flex gap-2">
+                                                    <input type="date" name="scheduled_date" value="{{ $visit->scheduled_at ? $visit->scheduled_at->format('Y-m-d') : '' }}" class="rounded-xl border-slate-200 text-xs py-1.5 focus:border-indigo-500 focus:ring-indigo-500/20 max-w-[120px] font-semibold text-slate-800">
+                                                    <input type="time" name="scheduled_time" value="{{ $visit->scheduled_at ? $visit->scheduled_at->format('H:i') : '' }}" class="rounded-xl border-slate-200 text-xs py-1.5 focus:border-indigo-500 focus:ring-indigo-500/20 max-w-[100px] font-semibold text-slate-800">
+                                                </div>
+
+                                                <select name="status" x-model="status" required class="rounded-xl border-slate-200 text-xs py-1.5 focus:border-indigo-500 focus:ring-indigo-500/20 max-w-[120px] font-semibold text-slate-800">
+                                                    <option value="assigned" @selected($visit->status === 'assigned')>Assigned</option>
+                                                    <option value="scheduled" @selected($visit->status === 'scheduled')>Scheduled</option>
+                                                    <option value="completed" @selected($visit->status === 'completed')>Completed</option>
+                                                    <option value="cancelled" @selected($visit->status === 'cancelled')>Cancelled</option>
+                                                </select>
+
+                                                <button type="submit" class="inline-flex items-center px-3 py-2 border border-transparent text-xs font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-all">
+                                                    Update
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                @endif
                             </td>
                         </tr>
                     @empty

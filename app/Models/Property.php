@@ -109,5 +109,13 @@ class Property extends Model
     {
         return $this->hasMany(VisitRequest::class);
     }
+
+    /**
+     * Get the deals closed for this property.
+     */
+    public function deals(): HasMany
+    {
+        return $this->hasMany(Deal::class);
+    }
 }
 

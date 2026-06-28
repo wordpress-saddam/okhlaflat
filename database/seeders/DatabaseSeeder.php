@@ -3,23 +3,51 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Seed Roles and Permissions
+        $this->call(RolesAndPermissionsSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // 2. Seed Localities & Amenities
+        $this->call(LocalitySeeder::class);
+        $this->call(AmenitySeeder::class);
+
+        // 3. Create Administrator
+        $admin = User::firstOrCreate([
+            'email' => 'admin@okhlaflat.com'
+        ], [
+            'name' => 'Admin User',
+            'password' => Hash::make('password123'),
+            'email_verified_at' => now(),
         ]);
+        $admin->assignRole('admin');
+
+        // 4. Create Agent
+        $agent = User::firstOrCreate([
+            'email' => 'agent@okhlaflat.com'
+        ], [
+            'name' => 'Agent Saddam',
+            'password' => Hash::make('password123'),
+            'email_verified_at' => now(),
+        ]);
+        $agent->assignRole('agent');
+
+        // 5. Create Customer
+        $customer = User::firstOrCreate([
+            'email' => 'customer@okhlaflat.com'
+        ], [
+            'name' => 'Customer Imran',
+            'password' => Hash::make('password123'),
+            'email_verified_at' => now(),
+        ]);
+        $customer->assignRole('customer');
     }
 }

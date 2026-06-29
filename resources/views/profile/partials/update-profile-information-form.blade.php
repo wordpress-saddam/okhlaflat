@@ -19,19 +19,19 @@
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" minlength="2" maxlength="255" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
             <x-input-label for="mobile" :value="__('Mobile Number')" />
-            <x-text-input id="mobile" name="mobile" type="tel" class="mt-1 block w-full" :value="old('mobile', $user->mobile)" required autocomplete="tel" />
+            <x-text-input id="mobile" name="mobile" type="tel" class="mt-1 block w-full" :value="old('mobile', $user->mobile)" required autocomplete="tel" minlength="10" maxlength="15" pattern="^\+?[0-9]{10,15}$" title="Mobile number must be 10 to 15 digits" />
             <x-input-error class="mt-2" :messages="$errors->get('mobile')" />
         </div>
 
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" maxlength="255" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())

@@ -58,8 +58,9 @@ class DealController extends Controller
         $agreementPath = $request->file('agreement_doc')->store('deals/agreements', 'public');
         $idProofPath = $request->file('id_proof')->store('deals/id_proofs', 'public');
 
-        // Calculate service fee (25% of monthly rent)
-        $serviceFee = (int) round($request->rent_amount * 0.25);
+        // Calculate service fee dynamically based on configured platform setting
+        $feePercentage = \App\Models\Setting::getValue('brokerage_fee_percentage', 25);
+        $serviceFee = (int) round($request->rent_amount * ($feePercentage / 100));
 
         // Create deal
         $deal = Deal::create([

@@ -70,7 +70,7 @@
                             </div>
                             <input type="number" name="rent_amount" id="rent_amount" value="{{ old('rent_amount', $visit->property ? $visit->property->rent : '') }}" required class="block w-full pl-8 rounded-xl border-slate-200 focus:border-indigo-500 focus:ring focus:ring-indigo-500/20 text-sm py-2.5" placeholder="e.g. 15000">
                         </div>
-                        <p class="mt-1 text-xs text-slate-400">OkhlaFlat will calculate 25% of this amount as the platform service fee.</p>
+                        <p class="mt-1 text-xs text-slate-400">OkhlaFlat will calculate {{ $globalBrokerageFee }}% of this amount as the platform service fee.</p>
                         @error('rent_amount')
                             <p class="mt-1 text-xs text-rose-600 font-semibold">{{ $message }}</p>
                         @enderror

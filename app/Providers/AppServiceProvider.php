@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            $view->with('globalBrokerageFee', \App\Models\Setting::getValue('brokerage_fee_percentage', 25));
+        });
     }
 }

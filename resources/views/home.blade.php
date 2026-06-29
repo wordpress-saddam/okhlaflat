@@ -12,7 +12,7 @@
                 Discover Verified Rental Flats in <span class="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Jamia Nagar</span>
             </h1>
             <p class="mt-6 text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-                Find flats online, book a physical office visit, and let our agents handle the search and documentation. Save thousands with our flat 25% service fee.
+                Find flats online, book a physical office visit, and let our agents handle the search and documentation. Save thousands with our flat {{ $globalBrokerageFee }}% service fee.
             </p>
 
             <!-- Search Form Bar -->
@@ -103,12 +103,12 @@
                 <!-- Info text -->
                 <div class="space-y-6">
                     <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Pricing Structure</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">The 25% Service Fee Model</h2>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">The {{ $globalBrokerageFee }}% Service Fee Model</h2>
                     <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
                         Traditional real estate brokers in Jamia Nagar demand **one full month's rent** as brokerage commission. We think that is unfair.
                     </p>
                     <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
-                        At OkhlaFlat, we charge **only 25% of one month's rent** as a flat service fee for our search, physical tours, documentation, and rental agreements.
+                        At OkhlaFlat, we charge **only {{ $globalBrokerageFee }}% of one month's rent** as a flat service fee for our search, physical tours, documentation, and rental agreements.
                     </p>
                 </div>
 
@@ -126,14 +126,14 @@
                             <span class="font-extrabold text-rose-400">₹16,000</span>
                         </div>
                         <div class="flex justify-between border-b border-indigo-900/50 pb-3">
-                            <span class="text-slate-400 text-xs">OkhlaFlat Service Fee (25%)</span>
-                            <span class="font-extrabold text-emerald-400">₹4,000</span>
+                            <span class="text-slate-400 text-xs">OkhlaFlat Service Fee ({{ $globalBrokerageFee }}%)</span>
+                            <span class="font-extrabold text-emerald-400">₹{{ number_format(16000 * ($globalBrokerageFee / 100)) }}</span>
                         </div>
                     </div>
 
                     <div class="bg-indigo-900/50 p-4 rounded-2xl text-center border border-indigo-850">
                         <span class="text-xs text-indigo-300 font-semibold block">Total Savings on Renting</span>
-                        <span class="text-3xl font-black text-emerald-400 mt-1 block">₹12,000 Saved!</span>
+                        <span class="text-3xl font-black text-emerald-400 mt-1 block">₹{{ number_format(16000 - (16000 * ($globalBrokerageFee / 100))) }} Saved!</span>
                     </div>
                 </div>
             </div>

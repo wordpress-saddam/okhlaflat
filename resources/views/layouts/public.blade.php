@@ -16,7 +16,6 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
         <!-- Alpine JS (Already compiled in app.js, but fallback for Blade) -->
-        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
         <style>
             body {
@@ -53,6 +52,7 @@
                     <nav class="hidden md:flex space-x-8">
                         <a href="{{ route('home') }}" class="text-sm font-semibold {{ Route::currentRouteName() === 'home' ? 'text-indigo-600' : 'text-slate-600 hover:text-indigo-600' }} transition-colors">Home</a>
                         <a href="{{ route('properties.index') }}" class="text-sm font-semibold {{ Route::currentRouteName() === 'properties.index' ? 'text-indigo-600' : 'text-slate-600 hover:text-indigo-600' }} transition-colors">Search Flats</a>
+                        <a href="{{ route('customer.properties.create') }}" class="text-sm font-semibold {{ Route::currentRouteName() === 'customer.properties.create' ? 'text-indigo-600' : 'text-slate-600 hover:text-indigo-600' }} transition-colors">List Your Flat</a>
                         <a href="{{ route('about') }}" class="text-sm font-semibold {{ Route::currentRouteName() === 'about' ? 'text-indigo-600' : 'text-slate-600 hover:text-indigo-600' }} transition-colors">About</a>
                         <a href="{{ route('contact') }}" class="text-sm font-semibold {{ Route::currentRouteName() === 'contact' ? 'text-indigo-600' : 'text-slate-600 hover:text-indigo-600' }} transition-colors">Contact</a>
                     </nav>
@@ -61,6 +61,7 @@
                     <div class="hidden md:flex items-center space-x-4">
                         @auth
                             <a href="{{ route('dashboard') }}" class="text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Portal Dashboard</a>
+                            <a href="{{ route('profile.edit') }}" class="text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Profile</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg hover:-translate-y-0.5 duration-200">
@@ -95,12 +96,14 @@
                 <div class="px-2 pt-2 pb-3 space-y-1">
                     <a href="{{ route('home') }}" class="block px-3 py-2 rounded-lg text-base font-semibold {{ Route::currentRouteName() === 'home' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50' }}">Home</a>
                     <a href="{{ route('properties.index') }}" class="block px-3 py-2 rounded-lg text-base font-semibold {{ Route::currentRouteName() === 'properties.index' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50' }}">Search Flats</a>
+                    <a href="{{ route('customer.properties.create') }}" class="block px-3 py-2 rounded-lg text-base font-semibold {{ Route::currentRouteName() === 'customer.properties.create' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50' }}">List Your Flat</a>
                     <a href="{{ route('about') }}" class="block px-3 py-2 rounded-lg text-base font-semibold {{ Route::currentRouteName() === 'about' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50' }}">About</a>
                     <a href="{{ route('contact') }}" class="block px-3 py-2 rounded-lg text-base font-semibold {{ Route::currentRouteName() === 'contact' ? 'text-indigo-600 bg-indigo-50' : 'text-slate-700 hover:text-indigo-600 hover:bg-slate-50' }}">Contact</a>
                 </div>
                 <div class="pt-4 pb-4 border-t border-slate-200 px-4 space-y-2">
                     @auth
                         <a href="{{ route('dashboard') }}" class="block text-center w-full px-4 py-2.5 text-base font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Portal Dashboard</a>
+                        <a href="{{ route('profile.edit') }}" class="block text-center w-full px-4 py-2.5 text-base font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Profile</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="block w-full px-4 py-2.5 text-center text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors">
@@ -135,7 +138,7 @@
                             </span>
                         </div>
                         <p class="text-sm text-slate-400 max-w-sm leading-relaxed">
-                            A premium hybrid real estate platform simplifying rental apartment discovery in Jamia Nagar. Find verified properties online, book an office visit, and let our agents help you move in with only a 25% service fee.
+                            A premium hybrid real estate platform simplifying rental apartment discovery in Jamia Nagar. Find verified properties online, book an office visit, and let our agents help you move in with only a {{ $globalBrokerageFee }}% service fee.
                         </p>
                     </div>
 

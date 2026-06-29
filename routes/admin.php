@@ -27,4 +27,8 @@ Route::middleware('role:admin')->group(function () {
     // Deal Invoices & Payments (Admin view & management)
     Route::get('deals/{deal}/invoice', [\App\Http\Controllers\Agent\DealController::class, 'invoice'])->name('deals.invoice');
     Route::post('deals/{deal}/payment-status', [\App\Http\Controllers\Agent\DealController::class, 'updatePaymentStatus'])->name('deals.payment-status');
+    
+    // Platform Settings
+    Route::get('settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::post('settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
 });

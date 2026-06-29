@@ -230,7 +230,7 @@
 
                     <div class="p-4 bg-indigo-950/80 rounded-xl border border-indigo-900/60 text-center">
                         <span class="text-[10px] text-indigo-300 font-extrabold uppercase tracking-wider block">Flat Brokerage Service Fee</span>
-                        <span class="text-xl font-black text-indigo-400 mt-1 block">Only 25% of 1 Month's Rent</span>
+                        <span class="text-xl font-black text-indigo-400 mt-1 block">Only {{ $globalBrokerageFee }}% of 1 Month's Rent</span>
                         <span class="text-[10px] text-indigo-300 mt-1 block leading-tight">Pay only a fraction instead of a full month's rent!</span>
                     </div>
 

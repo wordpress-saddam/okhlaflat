@@ -122,7 +122,7 @@
                 <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
                     <tr>
                         <td class="px-6 py-5">
-                            <span class="font-bold text-slate-900 block">OkhlaFlat Assistance Service Fee</span>
+                            <span class="font-bold text-slate-900 block">OkhlaFlat Assistance Service Fee ({{ $globalBrokerageFee }}%)</span>
                             <span class="text-xs text-slate-400 font-normal mt-0.5 block">Offline office-assisted verification, agreement drafting, and closing.</span>
                         </td>
                         <td class="px-6 py-5 text-right font-semibold">₹{{ number_format($deal->rent_amount) }}</td>

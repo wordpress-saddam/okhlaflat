@@ -10,9 +10,14 @@
                     <h3 class="text-2xl font-extrabold text-slate-900">Hello, {{ auth()->user()->name }}!</h3>
                     <p class="text-sm text-slate-500 mt-1">Discover premium rental flats in Jamia Nagar. Book your physical office visit to get started.</p>
                 </div>
-                <a href="{{ route('properties.index') }}" class="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg hover:-translate-y-0.5 duration-200">
-                    Browse Flats Catalogue
-                </a>
+                <div class="flex gap-4">
+                    <a href="{{ route('properties.index') }}" class="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg hover:-translate-y-0.5 duration-200">
+                        Browse Flats Catalogue
+                    </a>
+                    <a href="{{ route('customer.properties.create') }}" class="inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-md shadow-slate-100 hover:shadow-lg hover:-translate-y-0.5 duration-200">
+                        List Your Property
+                    </a>
+                </div>
             </div>
 
             @if(session('success'))

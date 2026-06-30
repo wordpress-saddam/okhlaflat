@@ -16,6 +16,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
+        $url = url()->previous();
+        $urlHost = parse_url($url, PHP_URL_HOST);
+        $requestHost = request()->getHost();
+        $isInternal = !$urlHost || $urlHost === $requestHost;
+
+        if ($url && !str_contains($url, '/login') && !str_contains($url, '/register') && $isInternal && !session()->has('url.intended')) {
+            session(['url.intended' => $url]);
+        }
+
         return view('auth.login');
     }
 

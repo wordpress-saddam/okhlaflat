@@ -12,9 +12,20 @@ class AmenityController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $amenities = Amenity::orderBy('name')->get();
+        $query = Amenity::query();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        if ($request->filled('status')) {
+            $status = $request->input('status') === 'active' ? 1 : 0;
+            $query->where('is_active', $status);
+        }
+
+        $amenities = $query->orderBy('name')->paginate(10)->withQueryString();
         return view('admin.amenities.index', compact('amenities'));
     }
 

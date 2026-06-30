@@ -18,6 +18,60 @@
         </div>
     </div>
 
+    <!-- Search & Filters Form -->
+    <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm p-5 mb-6">
+        <form action="{{ route('admin.properties.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Search input -->
+            <div>
+                <label for="search" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Search</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Title, code, address..." class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+            </div>
+
+            <!-- Verification Status filter -->
+            <div>
+                <label for="verification_status" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Verification</label>
+                <select name="verification_status" id="verification_status" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+                    <option value="">All Statuses</option>
+                    <option value="pending" {{ request('verification_status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="verified" {{ request('verification_status') === 'verified' ? 'selected' : '' }}>Verified</option>
+                    <option value="rejected" {{ request('verification_status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                </select>
+            </div>
+
+            <!-- Publication Status filter -->
+            <div>
+                <label for="publication_status" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Visibility</label>
+                <select name="publication_status" id="publication_status" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+                    <option value="">All Visibilities</option>
+                    <option value="draft" {{ request('publication_status') === 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="published" {{ request('publication_status') === 'published' ? 'selected' : '' }}>Published</option>
+                    <option value="archived" {{ request('publication_status') === 'archived' ? 'selected' : '' }}>Archived</option>
+                </select>
+            </div>
+
+            <!-- Locality filter -->
+            <div>
+                <label for="locality_id" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Locality</label>
+                <select name="locality_id" id="locality_id" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+                    <option value="">All Localities</option>
+                    @foreach($localities as $locality)
+                        <option value="{{ $locality->id }}" {{ request('locality_id') == $locality->id ? 'selected' : '' }}>{{ $locality->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="col-span-1 md:col-span-4 flex justify-end gap-3">
+                <a href="{{ route('admin.properties.index') }}" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-md shadow-slate-100 duration-200">
+                    Reset
+                </a>
+                <button type="submit" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 duration-200">
+                    Apply Filters
+                </button>
+            </div>
+        </form>
+    </div>
+
     <!-- Properties Table Card -->
     <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
         <div class="overflow-x-auto">

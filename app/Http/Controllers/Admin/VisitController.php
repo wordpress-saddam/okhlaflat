@@ -16,12 +16,37 @@ class VisitController extends Controller
     /**
      * Display a listing of all visit requests.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $visits = VisitRequest::with(['customer', 'property.locality', 'agent'])
-            ->latest()
-            ->paginate(15);
+        $query = VisitRequest::with(['customer', 'property.locality', 'agent']);
 
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('customer', function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('mobile', 'like', "%{$search}%");
+                })
+                ->orWhereHas('property', function ($sub) use ($search) {
+                    $sub->where('property_code', 'like', "%{$search}%")
+                        ->orWhere('title', 'like', "%{$search}%");
+                })
+                ->orWhereHas('agent', function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('agent_id')) {
+            $query->where('agent_id', $request->input('agent_id'));
+        }
+
+        $visits = $query->latest()->paginate(15)->withQueryString();
         $agents = User::role('agent')->orderBy('name')->get();
 
         return view('admin.visits.index', compact('visits', 'agents'));

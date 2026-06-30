@@ -24,6 +24,28 @@
         </div>
     @endif
 
+    <!-- Search Form -->
+    <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm p-6 mb-6">
+        <form action="{{ route('admin.agents.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+            <!-- Search input -->
+            <div class="md:col-span-8">
+                <label for="search" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Search Agent</label>
+                <div class="relative">
+                    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Name, email, or mobile..." class="block w-full pr-10 rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5 px-3">
+                </div>
+            </div>
+            <!-- Action buttons -->
+            <div class="md:col-span-4 flex gap-3">
+                <button type="submit" class="flex-1 inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 duration-200">
+                    Search
+                </button>
+                <a href="{{ route('admin.agents.index') }}" class="flex-1 inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-md shadow-slate-100 duration-200">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
     <!-- Agents Table Card -->
     <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
@@ -78,5 +100,12 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination footer -->
+        @if($agents->hasPages())
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100">
+                {{ $agents->links() }}
+            </div>
+        @endif
     </div>
 </x-admin-layout>

@@ -60,14 +60,51 @@
                     <!-- CTAs / User Auth -->
                     <div class="hidden md:flex items-center space-x-4">
                         @auth
-                            <a href="{{ route('dashboard') }}" class="text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Portal Dashboard</a>
-                            <a href="{{ route('profile.edit') }}" class="text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Profile</a>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg hover:-translate-y-0.5 duration-200">
-                                    Sign Out
+                            @php
+                                $words = explode(' ', Auth::user()->name);
+                                $initials = '';
+                                if (count($words) >= 2) {
+                                    $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                                } else {
+                                    $initials = strtoupper(substr(Auth::user()->name, 0, 2));
+                                }
+                            @endphp
+                            <div x-data="{ open: false }" @click.away="open = false" class="relative inline-block text-left">
+                                <button @click="open = !open" type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold text-sm tracking-wider shadow-md shadow-indigo-100 hover:scale-105 transition-all duration-200">
+                                    {{ $initials }}
                                 </button>
-                            </form>
+
+                                <div x-show="open" 
+                                     x-transition:enter="transition ease-out duration-100" 
+                                     x-transition:enter-start="transform opacity-0 scale-95" 
+                                     x-transition:enter-end="transform opacity-100 scale-100" 
+                                     x-transition:leave="transition ease-in duration-75" 
+                                     x-transition:leave-start="transform opacity-100 scale-100" 
+                                     x-transition:leave-end="transform opacity-0 scale-95" 
+                                     class="origin-top-right absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50 divide-y divide-slate-100 overflow-hidden" 
+                                     style="display: none;">
+                                    <div class="px-4 py-3">
+                                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Signed in as</p>
+                                        <p class="text-sm font-bold text-slate-800 truncate">{{ Auth::user()->name }}</p>
+                                    </div>
+                                    <div class="py-1">
+                                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">
+                                            Profile
+                                        </a>
+                                        <a href="{{ route('dashboard') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium">
+                                            Dashboard
+                                        </a>
+                                    </div>
+                                    <div class="py-1">
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="w-full text-left block px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50 transition-colors font-semibold">
+                                                Log Out
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         @else
                             <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-700 hover:text-indigo-600 transition-colors">Log in</a>
                             <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 rounded-xl transition-all shadow-md shadow-indigo-100 hover:shadow-lg hover:-translate-y-0.5 duration-200">

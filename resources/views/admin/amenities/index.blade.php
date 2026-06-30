@@ -41,6 +41,32 @@
 
         <!-- Amenities Table List (Span 2) -->
         <div class="lg:col-span-2 bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
+            <!-- Search & Filters -->
+            <div class="p-5 border-b border-slate-200 bg-slate-50/50">
+                <form action="{{ route('admin.amenities.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div>
+                        <label for="search" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Search</label>
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Amenity name..." class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+                    </div>
+                    <div>
+                        <label for="status" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Status</label>
+                        <select name="status" id="status" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+                            <option value="">All Statuses</option>
+                            <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="submit" class="flex-grow inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 duration-200">
+                            Apply
+                        </button>
+                        <a href="{{ route('admin.amenities.index') }}" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-md shadow-slate-100 duration-200">
+                            Reset
+                        </a>
+                    </div>
+                </form>
+            </div>
+
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-100 text-left">
                     <thead class="bg-slate-50 text-xs font-semibold text-slate-500 uppercase tracking-wider">
@@ -80,7 +106,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center text-slate-400">
+                                <td colspan="5" class="px-6 py-12 text-center text-slate-400">
                                     No amenities configured yet. Add one on the left.
                                 </td>
                             </tr>
@@ -88,6 +114,13 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination footer -->
+            @if($amenities->hasPages())
+                <div class="px-6 py-4 bg-slate-50 border-t border-slate-100">
+                    {{ $amenities->links() }}
+                </div>
+            @endif
         </div>
     </div>
 </x-admin-layout>

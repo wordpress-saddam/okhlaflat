@@ -11,6 +11,44 @@
         </p>
     </div>
 
+    <!-- Search & Filters Form -->
+    <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm p-5 mb-6">
+        <form action="{{ route('admin.visits.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div>
+                <label for="search" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Search</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Customer, agent, property..." class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+            </div>
+            <div>
+                <label for="status" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Status</label>
+                <select name="status" id="status" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+                    <option value="">All Statuses</option>
+                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="assigned" {{ request('status') === 'assigned' ? 'selected' : '' }}>Agent Assigned</option>
+                    <option value="scheduled" {{ request('status') === 'scheduled' ? 'selected' : '' }}>Scheduled</option>
+                    <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Completed</option>
+                    <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                </select>
+            </div>
+            <div>
+                <label for="agent_id" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Agent</label>
+                <select name="agent_id" id="agent_id" class="block w-full rounded-xl border-slate-200/85 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2 px-3">
+                    <option value="">All Agents</option>
+                    @foreach($agents as $agent)
+                        <option value="{{ $agent->id }}" {{ request('agent_id') == $agent->id ? 'selected' : '' }}>{{ $agent->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="flex-grow inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-md shadow-indigo-100 duration-200">
+                    Apply Filters
+                </button>
+                <a href="{{ route('admin.visits.index') }}" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-md shadow-slate-100 duration-200">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
     <!-- Leads Table Card -->
     <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
         <div class="overflow-x-auto">

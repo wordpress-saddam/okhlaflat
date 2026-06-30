@@ -16,9 +16,20 @@ class AgentController extends Controller
     /**
      * Display a listing of agents.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $agents = User::role('agent')->orderBy('name')->get();
+        $query = User::role('agent');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('mobile', 'like', "%{$search}%");
+            });
+        }
+
+        $agents = $query->orderBy('name')->paginate(10)->withQueryString();
         return view('admin.agents.index', compact('agents'));
     }
 

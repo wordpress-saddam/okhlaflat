@@ -18,13 +18,38 @@ class PropertyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $properties = Property::with(['locality', 'agent'])
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+        $query = Property::with(['locality', 'agent']);
 
-        return view('admin.properties.index', compact('properties'));
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('property_code', 'like', "%{$search}%")
+                  ->orWhere('title', 'like', "%{$search}%")
+                  ->orWhere('building_number', 'like', "%{$search}%")
+                  ->orWhereHas('locality', function ($sub) use ($search) {
+                      $sub->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('verification_status')) {
+            $query->where('verification_status', $request->input('verification_status'));
+        }
+
+        if ($request->filled('publication_status')) {
+            $query->where('publication_status', $request->input('publication_status'));
+        }
+
+        if ($request->filled('locality_id')) {
+            $query->where('locality_id', $request->input('locality_id'));
+        }
+
+        $properties = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
+        $localities = Locality::where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.properties.index', compact('properties', 'localities'));
     }
 
     /**
